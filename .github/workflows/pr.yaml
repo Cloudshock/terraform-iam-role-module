@@ -1,11 +1,16 @@
 name: Testing
 on:
-  pull_requests
+  pull_request
+permissions:
+  contents: write
 jobs:
-  terraform:
+  testing:
     name: Terraform Validation
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
     - uses: hashicorp/setup-terraform@v2
     - id: format-check
       name: Verify Terraform Format
@@ -17,14 +22,15 @@ jobs:
       name: Validate Terraform Configuration
       run: terraform validate
     - id: docs
-      name: Ensure README.md up-to-date
+      name: generate README.md content
       uses: terraform-docs/gh-actions@v1.0.0
       with:
-        fail-on-diff: true
-  tests:
-    name: Automated Testing
-    steps:
+        output-method: replace
+        git-push: true
     - id: tests
       name: Golang Tests
       run: go test .
       working-directory: ./tests
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
