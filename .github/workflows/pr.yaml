@@ -1,0 +1,30 @@
+name: Testing
+on:
+  pull_requests
+jobs:
+  terraform:
+    name: Terraform Validation
+    steps:
+    - uses: actions/checkout@v3
+    - uses: hashicorp/setup-terraform@v2
+    - id: format-check
+      name: Verify Terraform Format
+      run: terraform fmt -check -recursive
+    - id: init
+      name: Terraform Initialize
+      run: terraform init
+    - id: validate
+      name: Validate Terraform Configuration
+      run: terraform validate
+    - id: docs
+      name: Ensure README.md up-to-date
+      uses: terraform-docs/gh-actions@v1.0.0
+      with:
+        fail-on-diff: true
+  tests:
+    name: Automated Testing
+    steps:
+    - id: tests
+      name: Golang Tests
+      run: go test .
+      working-directory: ./tests
