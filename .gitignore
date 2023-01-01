@@ -1,3 +1,4 @@
 tests/.terraform
 tests/terraform.tfstate.d/
 tests/.terraform.lock.hcl
+.terraform/
