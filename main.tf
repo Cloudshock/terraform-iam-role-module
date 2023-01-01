@@ -1,4 +1,6 @@
 /*
+ * # terraform-iam-role-module
+ *
  * This module creates an IAM Role with a standard Trust Relationship policy
  * that is based on a aws:PrincipalTag condition. It is intended to be
  * incorporated into a specific Terraform Module that specifies the IAM policy
